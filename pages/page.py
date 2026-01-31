@@ -10,7 +10,7 @@ class KVPage:
         return self.used<self.page_size
 
     ## now we have a page system ready , we have to now allocate something to it
-    def allocation_of_slot(self):
+    def allocate_slot(self):
         if not self.has_space():
             raise RuntimeError("The Page is Full")
         slot = self.used ## basically 0 rn
