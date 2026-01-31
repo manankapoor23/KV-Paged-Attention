@@ -36,3 +36,10 @@ for token_idx in range(10):
         f"Token {token_idx} → Page {page.page_id}, Slot {slot}"
     )
 print(f"USES {len(pages)} pages ")
+
+## now we have our "paged" ready from the KV PagedAttention , now we have to work on the attention part of it 
+## kv is being stored correctly now and now it justs needs the actual kv vectors and attention
+## attentions the key-value via the page table 
+## there are no contigous kv tensors 
+## the page table is storing the (page_id,slot)
+## paged attention means iterating over the logical tokens which are the token ranges and then finding their respective page_id and slots , read the k and v values stores abt them and then concatenate logically
