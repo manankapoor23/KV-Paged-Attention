@@ -1,9 +1,17 @@
-## file for representing a single kv page 
+## file for representing a single kv page that can hold n slots
+## fixed size chunk of memory that can store KV entries for a limited nnumber of tokens
+import torch
 class KVPage:
-    def __init__(self,page_id,page_size):
+    def __init__(self,page_id,page_size,num_layers, num_heads, head_dim, device):
         self.page_id=page_id
         self.page_size=page_size
         self.used=0
+        self.K = torch.zeros(
+            num_layers, num_heads, page_size, head_dim, device=device
+        )
+        self.V = torch.zeros(
+            num_layers, num_heads, page_size, head_dim, device=device
+        )
 
     def has_space(self):
         ## checks if the current page has some space 
