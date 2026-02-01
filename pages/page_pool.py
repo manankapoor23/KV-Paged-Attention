@@ -20,6 +20,7 @@ class PagePool:
         return page
     
     def free_page(self,page_id):
+        print(f"[KVPager] Freeing page {page.page_id}")
         page = self.used_pages.pop(page_id)
         page.used=0
         self.free_page.append(page)
