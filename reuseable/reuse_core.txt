@@ -1,0 +1,59 @@
+Now the time has come to put this thing to some use 
+here we see that why KV cache is used in production
+it is bcs we can easily not compute the KV for the same token again and again and still use the transformer
+
+the naive system we built has no "REUSE" , the kv is computed every time for a token no matter if it was earlier present or not 
+this is big trade-off for multi-chat systems where the same token is used multiple times across different chats
+hence we need to build a REUSE system on top of naive system
+
+the reuse system will store the KV cache for every token that has been computed once
+and when the same token comes again we will just reuse the KV cache from the stored system
+this will save a lot of computation and speed up the system
+but the problem is that the KV cache will grow indefinitely as more and more tokens are processed
+hence we need to build a PAGED system on top of reuse system
+the paged system will store the KV cache in pages and when the memory limit is reached it
+will evict the least recently used pages to make space for new pages
+this will ensure that the memory usage is kept in check and the system can run indefinitely without running
+
+once kv is computed for a token it is stored in the reuse cache
+when the same token comes again we check if it is present in the reuse cache
+both requests point to the same kv cache pages 
+thi is where 10-50x speedup comes from
+
+without paging , kv lives forever in memory
+it lives in one continuous block of memory
+with paging , kv is broken into pages and stored in different blocks of memory
+when a token is requested , we check if it is present in the reuse cache
+if present we fetch the kv from the reuse cache pages
+if not present we compute the kv and store it in the reuse cache pages
+this way we can manage memory better and ensure that the system does not run out of memory
+
+NOW WE HAVE TO BUILD IMMUTABLE PAGES
+once a page is created it should not be modified , it can be shared safely 
+
+each page tracks a reference count
+when a token is requested , we check if it is present in the reuse cache
+if present we fetch the kv from the reuse cache pages and increment the reference count
+if not present we compute the kv and store it in the reuse cache pages with reference count 1
+when a page is evicted , we decrement the reference count
+if the reference count is 0 , we can free the page
+this way we can ensure that pages are not modified and can be shared safely across different requests
+out of memory
+
+ref_count = numver of sequences using this page
+
+When a new request reuses a prefix → ref_count += 1
+When a request finishes → ref_count -= 1
+When ref_count == 0 → page can be freed
+
+
+next comes up COW (copy-on-write) 
+when a page is shared across multiple sequencs , and one of them sequences needs
+write access to the page (eg: updating kv for new token) , we create a new page
+copy the kv from old page to new page ,
+decrement the old_page ref_count
+and write continues on the new page
+
+prefix reuse is the main speedup driver here , which is sharing memory
+COW is more of how we avoid the corruption of shared memory 
+

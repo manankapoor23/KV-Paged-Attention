@@ -13,6 +13,11 @@ class KVPage:
             num_layers, num_heads, page_size, head_dim, device=device
         )
 
+        ## Reuse and COW 
+        self.ref_count =0
+    
+    
+
     def has_space(self):
         ## checks if the current page has some space 
         return self.used<self.page_size

@@ -1,0 +1,2 @@
+If this test passes , which means paged attention is giving same output as naive attention , then we can be sure that paged attention is implemented correctly .
+We prove that paged attention is only the changes in memory layout

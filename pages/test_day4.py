@@ -32,3 +32,9 @@ output = scaled_dot_product_attention(Q,K_seq,V_seq)
 print("Paged attention o/p : ",output)
 
 ## a page fault happens when the system needs the storage for the token's KV
+## this output was computed without a contiguos kv tensor 
+## attention logic is it didnt care where kv lived
+## paging changes only memory layout , not the attention dynamics
+## attention weights depend on Q
+
+
