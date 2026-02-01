@@ -18,13 +18,22 @@ class PagePool:
         self.used_pages[page.page_id]=page
         print(f"[KVPager] Page fault -> allocated page {page.page_id}") 
         return page
-    
-    def free_page(self,page_id):
-        page = self.used_pages.pop(page_id)
-        print(f"[KVPager] Freeing page {page.page_id}")
-        page.used=0
+    def free_page(self, page):
+        page_id = page.page_id
+        print(f"[KVPager] Freeing page {page_id}")
+
+        # Remove from used pages
+        self.used_pages.pop(page_id, None)
+
+        # Reset page state
+        page.used = 0
+        page.ref_count = 0
+
+        # Return to free list
         self.free_pages.append(page)
+
         print(f"[KVPager] freed page {page_id}")
+
 
 
 ## memory computer per page and not per sequence as seen in Total size of KV cache in bytes = 2 times batch_size * sequence_length * num_heads * num_layers * num_dimensions * sizeof (FP16)

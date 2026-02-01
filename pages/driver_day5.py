@@ -174,12 +174,12 @@ def main():
     for p in pages:
         p.ref_count -= 1
         if p.ref_count == 0:
-            page_pool.free_page(p.page_id)
+            page_pool.free_page(p)
 
     for p in pages2:
         p.ref_count -= 1
         if p.ref_count == 0:
-            page_pool.free_page(p.page_id)
+            page_pool.free_page(p)
 
 
 if __name__ == "__main__":
