@@ -3,7 +3,7 @@
 A systems-focused exploration of how modern LLM inference engines manage memory efficiently during autoregressive decoding.
 
 ## 1. Motivation
-
+Well , the motivation for this project basically came when I read the paper "Attention Is All You Need" and OH MY GOD , it gave me all the motivation to think about LLMs and then randomly one day I was scrolling on X and read about vLLMs and what they do , and now here we are.
 Large Language Models rely on a Key-Value (KV) cache to accelerate autoregressive inference.
 A naïve KV cache grows linearly with sequence length, requires contiguous memory, and becomes inefficient or infeasible for:
 
