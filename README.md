@@ -141,16 +141,49 @@ While not optimized for throughput, the system explicitly tracks:
 
 These are the metrics that matter for inference correctness and scalability, not accuracy scores.
 
-## The Repo Structure 
-phew this repo I build , finally we are here , I mean the structure.
+## 9. Repository Structure
+
+```
 KV-Paged/
-├── pages/                 # Core systems implementation
-│   ├── page.py            # KVPage abstraction
-│   ├── page_pool.py       # Memory allocator
-│   ├── page_table.py      # Logical → physical mapping
-│   ├── prefix_cache.py   # Prefix reuse
-│   ├── attention.py      # Paged attention execution
-│   └── driver_day5.py    # End-to-end inference simulation
+├── pages/                          # Core systems implementation
+│   ├── page.py                     # KVPage abstraction — fixed-size KV storage
+│   ├── page_pool.py                # PagePool allocator — free/used page management
+│   ├── page_table.py               # PageTable — logical token → physical mapping
+│   ├── paged_kv_reader.py          # KV gathering from non-contiguous pages
+│   ├── prefix_cache.py             # PrefixCache — prefix reuse mechanism
+│   ├── attention.py                # Paged attention execution
+│   ├── driver_day5.py              # End-to-end inference simulation
+│   ├── test.py                     # Core unit tests
+│   ├── test_day3.py                # Test suite — day 3 iterations
+│   └── test_day4.py                # Test suite — day 4 iterations
 │
-├── comparison/            # Naive vs paged attention
-├── Benchmarks/            # Naive KV cache baseline
+├── comparison/                     # Naive vs paged attention validation
+│   ├── naive_attention.py          # Baseline attention (contiguous KV)
+│   ├── paged_attention.py          # Paged attention (indirect KV access)
+│   ├── driver_day4.py              # Comparison & correctness validation
+│   └── blah_blah.txt               # Notes
+│
+├── Benchmarks/                     # Reference implementations
+│   └── naive-kv-cache.py           # Naive KV cache baseline
+│
+├── reuseable/                      # Utility & reusable components
+│   └── reuse_core.txt
+│
+├── kv_tensor_visualization.py      # Visualization & debugging tools
+├── test.ipynb                      # Notebook for experiments
+├── requirements.txt                # Python dependencies
+├── README.md                       # This file
+└── venv/                           # Virtual environment
+```
+
+## 10. Key Files & Their Role
+
+| File | Purpose |
+|------|---------|
+| [pages/page.py](pages/page.py) | KVPage data structure with K, V tensors and reference counting |
+| [pages/page_pool.py](pages/page_pool.py) | Memory allocator managing page lifecycle |
+| [pages/page_table.py](pages/page_table.py) | Virtual memory mapping (token index → page + slot) |
+| [pages/attention.py](pages/attention.py) | Scaled dot-product attention kernel |
+| [pages/driver_day5.py](pages/driver_day5.py) | Multi-request inference simulation |
+| [comparison/naive_attention.py](comparison/naive_attention.py) | Baseline for correctness validation |
+| [comparison/paged_attention.py](comparison/paged_attention.py) | Paged variant for direct comparison |
