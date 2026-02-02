@@ -144,37 +144,13 @@ These are the metrics that matter for inference correctness and scalability, not
 ## The Repo Structure 
 phew this repo I build , finally we are here , I mean the structure.
 KV-Paged/
-├── README.md                          # Project documentation
-├── requirements.txt                   # Dependencies
+├── pages/                 # Core systems implementation
+│   ├── page.py            # KVPage abstraction
+│   ├── page_pool.py       # Memory allocator
+│   ├── page_table.py      # Logical → physical mapping
+│   ├── prefix_cache.py   # Prefix reuse
+│   ├── attention.py      # Paged attention execution
+│   └── driver_day5.py    # End-to-end inference simulation
 │
-├── pages/                             # Core systems implementation
-│   ├── page.py                        # KVPage abstraction
-│   ├── page_pool.py                   # Memory allocator & lifecycle
-│   ├── page_table.py                  # Logical → physical mapping
-│   ├── paged_kv_reader.py             # KV gathering from pages
-│   ├── prefix_cache.py                # Prefix reuse mechanism
-│   ├── attention.py                   # Paged attention execution
-│   ├── driver_day5.py                 # End-to-end inference driver
-│   ├── test.py                        # Unit tests
-│   ├── test_day3.py                   # Test suite day 3
-│   ├── test_day4.py                   # Test suite day 4
-│   └── __init__.py
-│
-├── comparison/                        # Naive vs paged attention
-│   ├── naive_attention.py             # Baseline attention
-│   ├── paged_attention.py             # Paged attention implementation
-│   ├── driver_day4.py                 # Comparison driver
-│   └── blah_blah.txt
-│
-├── Benchmarks/                        # Baseline implementations
-│   └── naive-kv-cache.py              # Naive KV cache reference
-│
-├── reuseable/                         # Reusable utilities
-│   └── reuse_core.txt
-│
-├── root-level utilities/
-│   ├── kv_tensor_visualization.py     # Visualization tools
-│   ├── test.ipynb                     # Notebook experiments
-│   ├── core_issue.txt                 # Problem notes
-│   ├── day_1.txt                      # Development notes
-│   └── venv/                          # Python virtual environment
+├── comparison/            # Naive vs paged attention
+├── Benchmarks/            # Naive KV cache baseline
